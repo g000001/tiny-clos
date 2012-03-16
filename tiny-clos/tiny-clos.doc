@@ -1,0 +1,117 @@
+From Gregor@parc.xerox.com Tue Nov 17 11:47:32 1992
+Return-Path: <gregor@parc.xerox.com>
+From: Gregor Kiczales <Gregor@parc.xerox.com>
+Sender: Gregor Kiczales <gregor@parc.xerox.com>
+Fake-Sender: gregor@parc.xerox.com
+To: dph@cs.cornell.edu
+To: jellinek@adoc.xerox.com
+To: dfried@cs.indiana.edu
+To: simmonsj@cs.indiana.edu
+To: jrossie@cs.indiana.edu
+To: jashley@cs.indiana.edu
+To: matsu@is.s.u-tokyo.ac.jp
+To: Yonezawa@is.s.u-tokyo.ac.jp
+To: takuo@jaist-east.ac.jp
+To: Mario@csl.sony.co.jp
+To: cointe@artemis.ireste.fr
+To: malenfan@iro.umontreal.ca
+To: meseguer@csl.sri.com
+To: ida@csrl.aoyama.ac.jp
+To: Chambers@cs.washington.edu
+To: cahrens@cs.washington.edu
+To: romer@cs.washington.edu
+To: jonl@lucid.com
+To: davis@ilog.fr
+To: alarson@src.honeywell.com (Aaron Larson)
+To: simon@lia.di.epfl.ch (Simon Leinen)
+To: Ruf@parc.xerox.com
+Cc: Lamping@parc.xerox.com, desRivieres@parc.xerox.com
+Subject: Tiny CLOS
+Line-Fold: NO
+Date: 	Fri, 13 Nov 1992 10:58:40 PST
+
+
+(I thought this message actually made it out.  But I did get a message
+>from a mailer, and at least one person seems not to have gotten it.  So,
+I'm sending it again.  I apologize if any of you are seeing it twice.)
+
+
+All of you have, directly or indirectly, expressed an interest in `Tiny
+CLOS.'  Some of you already have copies, and some don't.  This message,
+I think, has useful information for all, even if it has redundant
+information for some.
+
+Tiny CLOS is an implementation of what I consider to be a `core' subset
+of CLOS, with a correspondingly core metaobject protocol.  The base
+language ends up being considerably smaller than what is found in Dylan,
+and the MOP is pretty small as well.  The emphasis is on simplicity and
+clarity, rather than on performance.  As part of this, it is embedded in
+Scheme, rather than Common Lisp.  The goal is to make CLOS and MOP
+concepts available to students who don't know Common Lisp, or who aren't
+prepared to go through the hassle of dealing with it.  The resulting
+implementation is even simpler than the Closette found in AMOP, weighing
+in at around 850 lines of code, including comments and documentation.
+
+(Note that I did make a couple of minor concessions to performance, but
+I don't think they obscure the code very much.  Otherwise, reading a
+slot would have required consing several lists and a couple of
+closures!)
+
+A great deal has already been said and theorized about how to teach OOP
+and CLOS-like languages, so I won't say any more about that.  It isn't
+my primary goal with this piece of code anyways, presenting MOPs is.
+But, let me make one comment about a significant way that Tiny CLOS is
+different from CLOS.  In Tiny CLOS, slot names are not required to be
+symbols, they can be any Scheme datum (object).  (They are compared
+using eq?.)  This means that one can use the lexical scoping mechanisms
+of Scheme to achieve a greater degree of encapsulation than is possible
+in CLOS.  For more on this, see the tiny-examples.scm file.
+
+The MOP in Tiny CLOS is simple -- 8 introspective procedures and 8
+intercessory generics -- but I believe it is equal in power to both of
+the ones found in AMOP.  While this implementation itself isn't
+optimized, this MOP is amenable to optimization, using techniques like
+those mentioned in AMOP.  In fact, the slot access protocol used in this
+MOP is such that it should be possible to get better performance than is
+possible with the CLOS MOP.
+
+Accompanying Tiny CLOS is a file of examples, that show various ways to
+use the MOP to do common extensions.  Other things people might want to
+write are: before and after methods, slot filling initargs, beta-like
+languages, singleton methods etc.
+
+To make distribution simple, I have made Tin CLOS available by anonymous
+ftp from parcftp.xerox.com:/pub/mops.  There are three files of Scheme
+code: tiny-clos.scm, support.scm and tiny-examples.scm.  I have only run
+them in MIT Scheme 11.74, but they should run with only minor mods in
+other Schemes as well.  (Please send me those mods!)
+
+Note that I am not completely happy with this language, this MOP or this
+code.  Please send me any and all suggestions or changes.  It is worth
+knowing that this is the first Scheme program I have written in 10
+years, so I'm willing to believe I have a lot to learn about good Scheme
+style.  Let me know about any stupid things I'm doing there as well.
+
+One other note.  You will notice that these files have a copyright
+notice on them, as is the fashion these days.  I hope this doesn't
+bother anyone too much, but it isn't copyleft, it is more liberal than
+that.  But please do read it, and let me know if there are any problems.
+(I sure hope that with something this short there aren't, but who knows!)
+
+For those of you who have previous versions of Tiny CLOS, here is a
+summary of the changes in this version:
+
+  * New protocol for getters and setters.
+  * New names for generics in the generic invocation protocol,
+    that better reflect their `curried' nature.
+  * I fixed a bunch of comments that were out of date.
+  * I added a version variable, at the beginning of the main
+    source file, for use in keeping track of who has what.
+  * I added an edit history, for people who like those things.
+
+
+Have fun,
+
+Gregor
+
+
